@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consent Banner – demo</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 2rem; }
+    main { max-width: 640px; margin: 0 auto; }
+    .status { padding: 1rem; border-radius: 8px; background: #f2f2f2; margin: 1rem 0; }
+    .status.on { background: #d9f2d9; }
+    /* Banner — in Webflow this styling is done in the Designer */
+    .cookie-banner {
+      display: none; /* hidden by default, script shows it when needed */
+      position: fixed; left: 1rem; right: 1rem; bottom: 1rem;
+      max-width: 480px; margin: 0 auto;
+      background: #1a1a1a; color: #fff; padding: 1.25rem 1.5rem;
+      border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.35);
+      align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .cookie-banner p { margin: 0; flex: 1 1 240px; font-size: .9rem; line-height: 1.4; }
+    .cookie-banner button {
+      font: inherit; padding: .55rem 1.1rem; border-radius: 8px; border: 0; cursor: pointer;
+    }
+    .btn-accept { background: #4ade80; color: #10321c; font-weight: 600; }
+    .btn-decline { background: transparent; color: #fff; border: 1px solid #666 !important; }
+    footer { margin-top: 3rem; font-size: .85rem; color: #666; }
+    footer a { color: inherit; }
+    iframe { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 8px; background: #e8e8e8; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Demo-sivu</h1>
+    <p>Tämä sivu esittää asiakassivustoa, jolla on analytiikkaa ja YouTube-upotus.</p>
+
+    <div class="status" id="analytics-status">Analytiikka: EI ladattu</div>
+    <div class="status" id="consent-mode-status">Consent Mode: –</div>
+
+    <h2>Video-upotus</h2>
+    <iframe data-consent-src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" title="Video"></iframe>
+
+    <footer>
+      <a href="#" data-consent="open">Evästeasetukset</a> ·
+      <a href="#" id="reset">(testaus: tyhjennä valinta)</a>
+    </footer>
+  </main>
+
+  <!-- Banner: in a real project this is a Webflow component -->
+  <div class="cookie-banner" data-consent="banner" data-consent-display="flex">
+    <p>Käytämme evästeitä kävijäseurantaan. Hyväksytkö evästeet?
+       <a href="#" style="color:#9ad">Evästeseloste</a></p>
+    <button class="btn-accept" data-consent="accept">Hyväksy</button>
+    <button class="btn-decline" data-consent="decline">Hylkää</button>
+  </div>
+
+  <!-- "Client analytics snippet" — blocked until consent -->
+  <script type="text/plain" data-consent-script>
+    var el = document.getElementById('analytics-status');
+    el.textContent = 'Analytiikka: LADATTU ✔';
+    el.classList.add('on');
+    document.cookie = '_ga=GA1.1.demo; path=/';
+  </script>
+
+  <!-- The consent banner script (in production: jsDelivr URL) -->
+  <script src="../banner.js" defer></script>
+
+  <!-- demo helpers -->
+  <script>
+    document.getElementById('reset').addEventListener('click', function (e) {
+      e.preventDefault();
+      localStorage.removeItem('consent-banner');
+      location.reload();
+    });
+    // show latest consent mode signal pushed to dataLayer
+    setInterval(function () {
+      var last = (window.dataLayer || []).filter(function (x) {
+        return x && x[0] === 'consent';
+      }).pop();
+      if (last) {
+        document.getElementById('consent-mode-status').textContent =
+          'Consent Mode: ' + last[1] + ' → analytics_storage=' + last[2].analytics_storage;
+      }
+    }, 300);
+  </script>
+</body>
+</html>

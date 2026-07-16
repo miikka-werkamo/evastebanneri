@@ -1,8 +1,8 @@
 # Nopea ohjeistus
 
-Lisää Webflow-sivun Head Codeen: <script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js" defer></script>
+Lisää Webflow-sivun Head Codeen: `<script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js" defer></script>`
 
-Sitten kun lisäät seurantakoodeja vaihda <script> siten, että se on <script type="text/plain" data-consent-script>
+Sitten kun lisäät seurantakoodeja vaihda `<script>` siten, että se on `<script type="text/plain" data-consent-script>`
 
 Tämä muuttaa aktiivisen seurantakoodin tekstiksi, jonka evästebanneri muuttaa taas aktiiviseksi, kun vierailija suostuu bannerin kautta seurantaan.
 

@@ -1,5 +1,5 @@
 /*!
- * Simple Consent Banner v1.0.0
+ * Simple Consent Banner v1.0.1
  * Yes/no cookie consent for Webflow sites.
  *
  * - Blocks scripts marked  <script type="text/plain" data-consent-script>
@@ -96,7 +96,7 @@
 
   /* ---- best-effort cleanup of common tracking cookies on decline ---- */
   function cleanupCookies() {
-    var prefixes = ['_ga', '_gid', '_gcl', '_fbp', '_fbc'];
+    var prefixes = ['_ga', '_gid', '_gcl', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie', '_pin_', '_scid', '_uetsid', '_uetvid', 'li_'];
     var names = document.cookie.split(';').map(function (c) {
       return c.split('=')[0].trim();
     });

@@ -1,3 +1,13 @@
+# Nopea ohjeistus
+
+Lisää Webflow-sivun Head Codeen: <script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js" defer></script>
+
+Sitten kun lisäät seurantakoodeja vaihda <script> siten, että se on <script type="text/plain" data-consent-script>
+
+Tämä muuttaa aktiivisen seurantakoodin tekstiksi, jonka evästebanneri muuttaa taas aktiiviseksi, kun vierailija suostuu bannerin kautta seurantaan.
+
+
+
 # Simple Consent Banner
 
 A minimal yes/no cookie consent system for Webflow sites. One small script (no dependencies),

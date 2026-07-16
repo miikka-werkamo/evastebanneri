@@ -1,5 +1,5 @@
 /*!
- * Simple Consent Banner v1.0.1
+ * Simple Consent Banner v1.0.2
  * Yes/no cookie consent for Webflow sites.
  *
  * - Blocks scripts marked  <script type="text/plain" data-consent-script>
@@ -94,9 +94,14 @@
     activated = true;
   }
 
-  /* ---- best-effort cleanup of common tracking cookies on decline ---- */
+  /* ---- best-effort cleanup of common tracking cookies and storage on decline ---- */
   function cleanupCookies() {
-    var prefixes = ['_ga', '_gid', '_gcl', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie', '_pin_', '_scid', '_uetsid', '_uetvid', 'li_'];
+    var prefixes = ['_ga', '_gid', '_gcl', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie',
+                    'ttcsid', 'tt_', '_pin_', '_scid', '_uetsid', '_uetvid', 'li_'];
+    function tracked(name) {
+      return prefixes.some(function (p) { return name.indexOf(p) === 0; });
+    }
+
     var names = document.cookie.split(';').map(function (c) {
       return c.split('=')[0].trim();
     });
@@ -107,12 +112,20 @@
       domains.push(parts.slice(i).join('.'));
     }
     names.forEach(function (name) {
-      var tracked = prefixes.some(function (p) { return name.indexOf(p) === 0; });
-      if (!tracked) return;
+      if (!tracked(name)) return;
       domains.forEach(function (d) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' +
           (d ? '; domain=' + d : '');
       });
+    });
+
+    // trackers (e.g. TikTok) also stash session data in web storage
+    [localStorage, sessionStorage].forEach(function (store) {
+      try {
+        Object.keys(store).forEach(function (key) {
+          if (key !== STORAGE_KEY && tracked(key)) store.removeItem(key);
+        });
+      } catch (e) {}
     });
   }
 

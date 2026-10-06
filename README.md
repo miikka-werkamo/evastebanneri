@@ -1,6 +1,6 @@
 # Nopea ohjeistus
 
-Lisää Webflow-sivun Head Codeen: `<script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js" defer></script>`
+Lisää Webflow-sivun Head Codeen: `<script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.min.js" defer></script>`
 
 Sitten kun lisäät seurantakoodeja vaihda `<script>` siten, että se on `<script type="text/plain" data-consent-script>`
 
@@ -33,7 +33,7 @@ should use a platform they control themselves (Cookiebot, CookieYes, …).
 1. The files live in the public GitHub repo `miikka-werkamo/evastebanneri`.
 2. Publish a release with tag `v1.0.0` (GitHub → Releases → Create a new release).
 3. The script is then served free by jsDelivr:
-   `https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js`
+      `https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.min.js`
    (`@1` = latest 1.x release — bugfix releases reach all client sites automatically,
    allow up to ~24 h for jsDelivr's cache. Pin `@1.0.0` instead if you want zero surprises.)
 
@@ -61,7 +61,7 @@ Structure (style freely — the script only reads the attributes):
 Site Settings → Custom Code → **Head Code**:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/miikka-werkamo/evastebanneri@1/banner.min.js" defer></script>
 ```
 
 ### 3. Add the client's tracking snippets — blocked

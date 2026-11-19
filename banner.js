@@ -1,10 +1,11 @@
 /*!
- * Simple Consent Banner v1.0.2
+ * Simple Consent Banner v1.0.4
  * Yes/no cookie consent for Webflow sites.
  *
  * - Blocks scripts marked  <script type="text/plain" data-consent-script>
  *   and iframes marked     <iframe data-consent-src="..."> until the visitor accepts.
  * - Sends Google Consent Mode v2 signals (default denied, granted on accept).
+ * - Sends Microsoft Clarity its consent signal (consentv2) on accept, so Clarity can set its cookies.
  * - Banner UI is built and styled in Webflow; this script only finds it by attributes:
  *     data-consent="banner"   the banner wrapper (set to Display: None in Webflow)
  *     data-consent="accept"   the accept button
@@ -86,6 +87,13 @@
       old.parentNode.replaceChild(s, old);
     }
 
+    // Microsoft Clarity needs its own consent signal in the EEA; without it Clarity runs
+    // cookieless and counts every page view as a new visitor. window.clarity exists here
+    // only if a Clarity snippet was among the scripts un-blocked above.
+    if (typeof window.clarity === 'function') {
+      window.clarity('consentv2', { ad_Storage: 'granted', analytics_Storage: 'granted' });
+    }
+
     var frames = document.querySelectorAll('iframe[data-consent-src]');
     for (var k = 0; k < frames.length; k++) {
       frames[k].src = frames[k].getAttribute('data-consent-src');
@@ -97,7 +105,8 @@
   /* ---- best-effort cleanup of common tracking cookies and storage on decline ---- */
   function cleanupCookies() {
     var prefixes = ['_ga', '_gid', '_gcl', '_fbp', '_fbc', '_ttp', '_tt_enable_cookie',
-                    'ttcsid', 'tt_', '_pin_', '_scid', '_uetsid', '_uetvid', 'li_'];
+                    'ttcsid', 'tt_', '_pin_', '_scid', '_uetsid', '_uetvid', 'li_',
+                    '_clck', '_clsk'];
     function tracked(name) {
       return prefixes.some(function (p) { return name.indexOf(p) === 0; });
     }
